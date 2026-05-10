@@ -51,7 +51,7 @@ Before writing any code:
 - [ ] Identify opportunities for [deep modules](deep-modules.md) (small interface, deep implementation)
 - [ ] Design interfaces for [testability](interface-design.md)
 - [ ] List the behaviors to test (not implementation steps)
-- [ ] Check with the user if scope or interface is ambiguous; otherwise state the plan and proceed
+- [ ] Get user approval on the plan
 
 Ask: "What should the public interface look like? Which behaviors are most important to test?"
 
@@ -68,12 +68,6 @@ GREEN: Write minimal code to pass → test passes
 
 This is your tracer bullet — proves the path works end-to-end.
 
-The RED signal must be meaningful:
-
-- The test command exits non-zero because the expected behavior is missing.
-- The failure message points at the intended behavior, not setup, syntax, missing fixtures, or a broken harness.
-- If the harness is broken, fix the harness before writing implementation.
-
 ### 3. Incremental Loop
 
 For each remaining behavior:
@@ -89,7 +83,6 @@ Rules:
 - Only enough code to pass current test
 - Don't anticipate future tests
 - Keep tests focused on observable behavior
-- Re-run the smallest relevant test command after each GREEN; run the broader suite before declaring done
 
 ### 4. Refactor
 
@@ -113,9 +106,22 @@ After all tests pass, look for [refactor candidates](refactoring.md):
 [ ] No speculative features added
 ```
 
-## Common errors
+## When to Deviate from Strict TDD
 
-- Writing tests for planned data structures before the interface has earned them.
-- Treating a harness failure as RED.
-- Mocking internal collaborators because the current seam is inconvenient.
-- Leaving flaky tests in the suite without isolating clock, random, network, or storage state.
+TDD is a tool, not a religion. Deviate deliberately when:
+
+- **Exploratory coding on unfamiliar terrain.** When you don't yet know what the interface should look like, writing tests first is guessing. Prototype the implementation, discover the shape, then extract tests from what you learned.
+- **Writing tests for existing untested code (characterization tests).** You're documenting current behavior, not designing new behavior. Write the test to capture what the code actually does before refactoring.
+- **Trivial glue code.** Boilerplate that wires together already-tested modules doesn't benefit from test-first. Write it, then verify integration at a higher level.
+- **The test framework makes incremental testing impractical.** Some domains (GPU shaders, embedded firmware, complex visual output) have feedback loops measured in minutes. Batch written tests may be pragmatically necessary — but acknowledge you're deviating and why.
+
+When deviating, state the reason explicitly in a code comment or commit message. "Skipped TDD here because <reason>" is enough to prevent future maintainers from thinking it was carelessness.
+
+## Common Mistakes
+
+- **Testing implementation details instead of behavior.** If renaming an internal function breaks tests, those tests are wrong. The test should care about what the system produces, not which internal steps it took.
+- **Mocking internal collaborators.** Mocking your own classes/modules couples tests to the current structure. Only mock at true system boundaries (external APIs, time, randomness).
+- **Over-testing simple getters, constructors, and delegation.** A test that asserts `new User("Alice").name` equals `"Alice"` tests the language runtime, not your code.
+- **Writing tests that never fail.** If you write the implementation first and then a test that passes on the first run, you haven't tested anything — you've written a duplicate of the implementation. Delete the test or invert it temporarily to verify it can fail.
+- **Horizontal slicing.** Writing all tests before any implementation. This anchors on imagined behavior and produces brittle tests that don't survive implementation reality.
+- **Refactoring while RED.** Don't clean up code structure while tests are failing. Get to GREEN first, then refactor with the safety net of passing tests.

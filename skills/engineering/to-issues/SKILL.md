@@ -1,6 +1,6 @@
 ---
 name: to-issues
-description: Break an approved plan or PRD into independently deliverable vertical-slice issues with clear dependencies and acceptance criteria. Use when turning product or engineering plans into issue tracker work items for humans or coding agents.
+description: Break a plan into independently-grabbable issues using vertical slices (tracer bullets). Use when a plan, PRD, or design needs to be converted into actionable tasks for an issue tracker.
 ---
 
 # To Issues
@@ -13,8 +13,6 @@ Break a plan into independently-grabbable issues using vertical slices (tracer b
 
 Work from whatever is already in the conversation context. If the user passes an issue reference (issue number, URL, or path), fetch it from the issue tracker and read its full body and comments.
 
-If no issue tracker is configured or accessible, produce issue drafts in the same template and say they are ready to paste.
-
 ### 2. Explore the codebase (optional)
 
 If you haven't explored the codebase, do so to understand the current state. Issue titles and descriptions should use the project's domain vocabulary.
@@ -26,12 +24,9 @@ Break the plan into **tracer bullet** issues. Each issue is a thin vertical slic
 Slices may be 'HITL' (requires human interaction) or 'AFK' (can be implemented without human interaction). Prefer AFK over HITL where possible.
 
 Rules:
-
 - Each slice delivers a narrow but COMPLETE path through every layer (schema, API, UI, tests)
 - A completed slice is demoable or verifiable on its own
 - Prefer many thin slices over few thick ones
-- Each slice has one primary user-visible behavior or operational outcome
-- Dependencies are explicit; avoid hidden sequencing in prose
 
 ### 4. Quiz the user
 
@@ -54,7 +49,24 @@ Iterate until the user approves the breakdown.
 
 For each approved slice, publish a new issue using the template below. Publish in dependency order so you can reference real issue identifiers.
 
-After publishing, verify that every issue exists, links to its blockers, and can be understood without reading the whole conversation.
+## Granularity Guidelines
+
+A slice is too big when:
+- It takes more than 1–2 days of focused work.
+- It covers multiple distinct user stories.
+- The acceptance criteria list exceeds 5–7 items.
+
+A slice is too small when:
+- It delivers no user-visible or testable behavior on its own.
+- It's a single-file change with no integration touchpoints (that's a commit, not an issue).
+- Its description is a tautology of its title.
+
+## When Not to Use This
+
+- **The plan is a single, small change.** Breaking a one-hour task into slices is overhead, not leverage.
+- **The user is exploring, not committing.** If the user is prototyping or brainstorming, issues lock thinking too early.
+- **No issue tracker is configured.** Don't publish issues to nowhere. Skip to a checklist in the conversation instead.
+- **The work is firefighting.** A critical bug fix doesn't benefit from issue decomposition — fix first, document after.
 
 ## Issue Template
 
@@ -75,17 +87,8 @@ Avoid specific file paths or code snippets. Exception: if a prototype produced a
 - [ ] Criterion 2
 - [ ] Criterion 3
 
-Each criterion should be observable through product behavior, API behavior, logs/metrics, or a named command. Avoid "implementation completed" as a criterion.
-
 ## Blocked by
 
 - A reference to the blocking ticket (if any)
 - Or "None - can start immediately" if no blockers
 ```
-
-## Common errors
-
-- Creating horizontal issues like "add schema", "add API", "add UI" when none are useful alone.
-- Writing acceptance criteria that require knowing the implementation.
-- Omitting test or verification expectations from AFK issues.
-- Publishing issues before the user has approved the dependency graph.
