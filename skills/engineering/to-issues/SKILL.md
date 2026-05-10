@@ -1,3 +1,8 @@
+---
+name: to-issues
+description: Break an approved plan or PRD into independently deliverable vertical-slice issues with clear dependencies and acceptance criteria. Use when turning product or engineering plans into issue tracker work items for humans or coding agents.
+---
+
 # To Issues
 
 Break a plan into independently-grabbable issues using vertical slices (tracer bullets).
@@ -7,6 +12,8 @@ Break a plan into independently-grabbable issues using vertical slices (tracer b
 ### 1. Gather context
 
 Work from whatever is already in the conversation context. If the user passes an issue reference (issue number, URL, or path), fetch it from the issue tracker and read its full body and comments.
+
+If no issue tracker is configured or accessible, produce issue drafts in the same template and say they are ready to paste.
 
 ### 2. Explore the codebase (optional)
 
@@ -19,9 +26,12 @@ Break the plan into **tracer bullet** issues. Each issue is a thin vertical slic
 Slices may be 'HITL' (requires human interaction) or 'AFK' (can be implemented without human interaction). Prefer AFK over HITL where possible.
 
 Rules:
+
 - Each slice delivers a narrow but COMPLETE path through every layer (schema, API, UI, tests)
 - A completed slice is demoable or verifiable on its own
 - Prefer many thin slices over few thick ones
+- Each slice has one primary user-visible behavior or operational outcome
+- Dependencies are explicit; avoid hidden sequencing in prose
 
 ### 4. Quiz the user
 
@@ -44,6 +54,8 @@ Iterate until the user approves the breakdown.
 
 For each approved slice, publish a new issue using the template below. Publish in dependency order so you can reference real issue identifiers.
 
+After publishing, verify that every issue exists, links to its blockers, and can be understood without reading the whole conversation.
+
 ## Issue Template
 
 ```markdown
@@ -63,8 +75,17 @@ Avoid specific file paths or code snippets. Exception: if a prototype produced a
 - [ ] Criterion 2
 - [ ] Criterion 3
 
+Each criterion should be observable through product behavior, API behavior, logs/metrics, or a named command. Avoid "implementation completed" as a criterion.
+
 ## Blocked by
 
 - A reference to the blocking ticket (if any)
 - Or "None - can start immediately" if no blockers
 ```
+
+## Common errors
+
+- Creating horizontal issues like "add schema", "add API", "add UI" when none are useful alone.
+- Writing acceptance criteria that require knowing the implementation.
+- Omitting test or verification expectations from AFK issues.
+- Publishing issues before the user has approved the dependency graph.

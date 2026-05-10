@@ -1,3 +1,8 @@
+---
+name: tdd
+description: Practice behavior-first test-driven development with vertical red-green-refactor slices through public interfaces. Use when implementing features or fixes where tests should drive design, protect behavior, or expose better module boundaries.
+---
+
 # Test-Driven Development
 
 ## Philosophy
@@ -46,7 +51,7 @@ Before writing any code:
 - [ ] Identify opportunities for [deep modules](deep-modules.md) (small interface, deep implementation)
 - [ ] Design interfaces for [testability](interface-design.md)
 - [ ] List the behaviors to test (not implementation steps)
-- [ ] Get user approval on the plan
+- [ ] Check with the user if scope or interface is ambiguous; otherwise state the plan and proceed
 
 Ask: "What should the public interface look like? Which behaviors are most important to test?"
 
@@ -63,6 +68,12 @@ GREEN: Write minimal code to pass → test passes
 
 This is your tracer bullet — proves the path works end-to-end.
 
+The RED signal must be meaningful:
+
+- The test command exits non-zero because the expected behavior is missing.
+- The failure message points at the intended behavior, not setup, syntax, missing fixtures, or a broken harness.
+- If the harness is broken, fix the harness before writing implementation.
+
 ### 3. Incremental Loop
 
 For each remaining behavior:
@@ -78,6 +89,7 @@ Rules:
 - Only enough code to pass current test
 - Don't anticipate future tests
 - Keep tests focused on observable behavior
+- Re-run the smallest relevant test command after each GREEN; run the broader suite before declaring done
 
 ### 4. Refactor
 
@@ -100,3 +112,10 @@ After all tests pass, look for [refactor candidates](refactoring.md):
 [ ] Code is minimal for this test
 [ ] No speculative features added
 ```
+
+## Common errors
+
+- Writing tests for planned data structures before the interface has earned them.
+- Treating a harness failure as RED.
+- Mocking internal collaborators because the current seam is inconvenient.
+- Leaving flaky tests in the suite without isolating clock, random, network, or storage state.

@@ -37,6 +37,7 @@ What maintainers get from depth. Change, bugs, knowledge, and verification conce
 - **The deletion test.** Imagine deleting the module. If complexity vanishes, the module wasn't hiding anything (it was a pass-through). If complexity reappears across N callers, the module was earning its keep.
 - **The interface is the test surface.** Callers and tests cross the same seam.
 - **One adapter means a hypothetical seam. Two adapters means a real one.** Don't introduce a seam unless something actually varies across it.
+- **Responsibility moves with the seam.** If callers still need the same ordering, validation, or recovery knowledge, the module did not become deeper.
 
 ## Relationships
 
@@ -45,3 +46,13 @@ What maintainers get from depth. Change, bugs, knowledge, and verification conce
 - A **Seam** is where a **Module**'s **Interface** lives.
 - An **Adapter** sits at a **Seam** and satisfies the **Interface**.
 - **Depth** produces **Leverage** for callers and **Locality** for maintainers.
+
+## Review language
+
+Prefer evidence-based phrases:
+
+- "This module is shallow because callers still..."
+- "The proposed seam would hide..."
+- "The test surface improves because..."
+
+Avoid vague phrases like "cleaner," "more modular," or "better abstraction" unless they are tied to leverage or locality.

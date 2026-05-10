@@ -1,3 +1,8 @@
+---
+name: grill-with-docs
+description: Stress-test a plan against the codebase's domain language and update glossary or ADR documentation as decisions become clear. Use when a user wants design grilling that stays grounded in existing docs, terminology, and implementation reality.
+---
+
 # Grill with Docs
 
 Grilling session that challenges your plan against the existing domain model, sharpens terminology, and updates documentation inline as decisions crystallise.
@@ -13,6 +18,13 @@ If a question can be answered by exploring the codebase, explore the codebase in
 ## Domain awareness
 
 During codebase exploration, also look for existing documentation:
+
+- root project instructions and README files
+- `CONTEXT.md` or `CONTEXT-MAP.md`
+- `docs/adr/` or similar decision records
+- domain glossaries, architecture docs, issue templates, and product specs
+
+Prefer existing project conventions over this skill's default filenames. Only create the default files below when the repo has no established convention.
 
 ### File structure
 
@@ -30,7 +42,7 @@ Most repos have a single context:
 
 If a `CONTEXT-MAP.md` exists at the root, the repo has multiple contexts. See [CONTEXT-FORMAT.md](CONTEXT-FORMAT.md) for details.
 
-Create files lazily — only when you have something to write.
+Create files lazily — only when you have a resolved term, relationship, ambiguity, or decision to write. Do not create empty documentation scaffolding.
 
 ## During the session
 
@@ -50,9 +62,13 @@ When domain relationships are being discussed, stress-test them with specific sc
 
 When the user states how something works, check whether the code agrees. If you find a contradiction, surface it.
 
+If code and docs disagree, record the conflict as unresolved unless the user explicitly confirms which source is authoritative.
+
 ### Update documentation inline
 
 When a term is resolved, update the project glossary right there. Don't batch these up — capture them as they happen. See [CONTEXT-FORMAT.md](CONTEXT-FORMAT.md).
+
+Do not write speculative terminology into durable docs. If a question remains open, capture it under "Flagged ambiguities" with the decision needed.
 
 ### Offer ADRs sparingly
 
@@ -63,3 +79,10 @@ Only offer to create an ADR when all three are true:
 3. **The result of a real trade-off** — there were genuine alternatives and you picked one for specific reasons
 
 See [ADR-FORMAT.md](ADR-FORMAT.md) for the format.
+
+## Common errors
+
+- Asking abstract questions when the code can answer them.
+- Creating an ADR for a routine implementation detail.
+- Treating the glossary as a dictionary of every noun in the repo. It should contain project-specific domain terms.
+- Updating docs after the session instead of while decisions are fresh.

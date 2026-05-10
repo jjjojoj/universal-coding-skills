@@ -1,3 +1,8 @@
+---
+name: improve-codebase-architecture
+description: Find architecture deepening opportunities by identifying shallow modules, misplaced seams, and weak interfaces, then propose refactors grounded in locality, leverage, and testability. Use when reviewing a codebase for structural improvement or planning a risky refactor.
+---
+
 # Improve Codebase Architecture
 
 Surface architectural friction and propose **deepening opportunities** — refactors that turn shallow modules into deep ones. The aim is testability and navigability.
@@ -32,8 +37,11 @@ Walk the codebase organically and note where you experience friction:
 - Where have pure functions been extracted just for testability, but the real bugs hide in how they're called?
 - Where do tightly-coupled modules leak across their seams?
 - Which parts of the codebase are untested, or hard to test through their current interface?
+- Where do callers need duplicated setup, ordering knowledge, retries, validation, or error handling?
 
 Apply the **deletion test** to anything you suspect is shallow.
+
+Capture concrete evidence: call sites, duplicated concepts, test pain, bug-prone ordering, or configuration that callers must remember. Do not propose architecture work from naming preference alone.
 
 ### 2. Present candidates
 
@@ -43,6 +51,8 @@ Present a numbered list of deepening opportunities. For each candidate:
 - **Problem** — why the current architecture is causing friction
 - **Solution** — plain English description of what would change
 - **Benefits** — explained in terms of locality and leverage, and how tests would improve
+- **Risk** — migration cost, behavior risk, and likely blast radius
+- **Verification** — what tests or checks prove the refactor preserved behavior
 
 Do NOT propose interfaces yet. Ask the user: "Which of these would you like to explore?"
 
@@ -66,3 +76,10 @@ If the user wants to explore alternative interfaces for the deepened module, gen
 - "Design around ports & adapters for cross-seam dependencies."
 
 Present designs sequentially, compare them, then give your own recommendation. See [INTERFACE-DESIGN.md](INTERFACE-DESIGN.md).
+
+## Anti-patterns
+
+- Adding an interface because it "might be useful later" without two real adapters or callers that vary.
+- Splitting code by technical layer when the user-facing behavior cuts across layers.
+- Preserving old shallow tests after a deeper interface has better coverage.
+- Proposing a rewrite when a narrower seam move would concentrate the same complexity.

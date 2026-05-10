@@ -10,6 +10,8 @@ Before exploring alternative interfaces, write a user-facing explanation:
 
 - The constraints any new interface would need to satisfy
 - The dependencies it would rely on, and which category they fall into (see [DEEPENING.md](DEEPENING.md))
+- The invariants callers should no longer need to remember
+- The migration shape: big-bang, adapter shim, or incremental call-site migration
 - A rough illustrative code sketch to ground the constraints — not a proposal, just a way to make constraints concrete
 
 ### 2. Generate radically different designs
@@ -28,6 +30,8 @@ Each design should include:
 3. What the implementation hides behind the seam
 4. Dependency strategy and adapters
 5. Trade-offs — where leverage is high, where it's thin
+6. Failure modes and how callers recover
+7. Test surface: which behaviours are verified through this interface
 
 ### 3. Present and compare
 
@@ -38,3 +42,5 @@ Present designs sequentially so the user can absorb each one, then compare them.
 - **Seam placement**
 
 After comparing, give your own recommendation: which design is strongest and why. If elements from different designs would combine well, propose a hybrid. Be opinionated.
+
+Reject any design that only renames the current shallow surface without hiding new complexity.

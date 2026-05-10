@@ -20,7 +20,8 @@ Characteristics:
 - Uses public API only
 - Survives internal refactors
 - Describes WHAT, not HOW
-- One logical assertion per test
+- One logical outcome per test; multiple assertions are fine when they describe the same outcome
+- Fails for exactly one useful reason
 
 ## Bad Tests
 
@@ -43,6 +44,8 @@ Red flags:
 - Test breaks when refactoring without behavior change
 - Test name describes HOW not WHAT
 - Verifying through external means instead of interface
+- Test passes even if the user-visible behavior is removed
+- Test fails because setup order, mocks, or snapshots are overspecified
 
 ```typescript
 // BAD: Bypasses interface to verify
@@ -59,3 +62,11 @@ test("createUser makes user retrievable", async () => {
   expect(retrieved.name).toBe("Alice");
 });
 ```
+
+## Test command semantics
+
+For any test command used in a TDD loop:
+
+- `0` means all selected tests passed.
+- Non-zero means at least one selected test failed or the harness could not run.
+- RED is only valid when the failure is the expected missing behavior. Syntax errors, missing env, missing fixtures, or test runner crashes are harness failures.

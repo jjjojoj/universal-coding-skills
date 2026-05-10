@@ -16,6 +16,8 @@ If the question is "what should this look like" — wrong branch. Use [UI.md](UI
 
 Before writing code, write down what state model and what question you're prototyping. One paragraph. A logic prototype that answers the wrong question is pure waste.
 
+Also name the non-goals. If persistence, auth, concurrency, or real integrations are out of scope, say so before building.
+
 ### 2. Pick the language
 
 Use whatever the host project uses. Match existing conventions for tooling — don't add a new package manager or runtime just for the prototype.
@@ -53,6 +55,11 @@ Behaviour:
 
 Add a script to the project's existing task runner. The user should run one command — never need to remember a path.
 
+Exit semantics:
+
+- `0`: user quit normally after exploring the model.
+- Non-zero: startup failed, required fixture/env was missing, or the prototype hit an unhandled state. Print the current action and state snapshot before exiting when possible.
+
 ### 6. Hand it over
 
 Give the user the run command. They'll drive it themselves. If they want new actions added, add them. Prototypes evolve.
@@ -68,3 +75,4 @@ When the prototype has done its job, the answer to the question is the only thin
 - **Don't generalise.** No "what if we wanted to support X later."
 - **Don't blur the logic and the TUI together.** Keep the TUI as a thin shell over a pure module.
 - **Don't ship the TUI shell into production.**
+- **Don't hide state transitions.** If the user cannot see what changed after an action, the prototype is not answering the question.

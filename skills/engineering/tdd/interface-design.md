@@ -29,3 +29,18 @@ Good interfaces make testing natural:
 3. **Small surface area**
    - Fewer methods = fewer tests needed
    - Fewer params = simpler test setup
+
+4. **Expose outcomes, not internals**
+
+   ```typescript
+   // Testable
+   const receipt = await checkout(cart, paymentMethod);
+   expect(receipt.status).toBe("confirmed");
+
+   // Brittle
+   expect(paymentGateway.charge).toHaveBeenCalledTimes(1);
+   ```
+
+5. **Make failure modes explicit**
+   - Return or throw domain-specific errors callers can assert on
+   - Avoid forcing tests to inspect logs, database rows, or private fields to know what happened

@@ -1,23 +1,30 @@
+---
+name: triage
+description: Triage issue tracker items through a small category/state workflow, gather context, recommend next state, and write actionable notes or implementation briefs. Use when reviewing unlabeled issues, stale needs-info items, bug reports, or feature requests.
+---
+
 # Triage
 
-Move issues on the project issue tracker through a small state machine of triage roles.
+Move issues on the project issue tracker through a small category/state workflow.
 
-## Roles
+## Labels / fields
 
-Two **category** roles:
+Use labels, fields, or tracker states that match the project. If the tracker already has equivalent names, map to them instead of creating duplicates.
+
+Two **category** values:
 
 - `bug` — something is broken
 - `enhancement` — new feature or improvement
 
-Five **state** roles:
+Five **state** values:
 
 - `needs-triage` — maintainer needs to evaluate
 - `needs-info` — waiting on reporter for more information
-- `ready-for-agent` — fully specified, ready for an AI agent
+- `ready-for-agent` — fully specified, ready for a coding agent
 - `ready-for-human` — needs human implementation
 - `wontfix` — will not be actioned
 
-Every triaged issue should carry exactly one category role and one state role.
+Every triaged issue should carry exactly one category value and one state value.
 
 State transitions: an unlabeled issue normally goes to `needs-triage` first; from there it moves to `needs-info`, `ready-for-agent`, `ready-for-human`, or `wontfix`. `needs-info` returns to `needs-triage` once the reporter replies.
 
@@ -31,6 +38,8 @@ Query the issue tracker and present three buckets, oldest first:
 
 Show counts and a one-line summary per issue. Let the maintainer pick.
 
+If tracker access is unavailable, ask for the issue body/comments or produce a local triage recommendation without modifying the tracker.
+
 ## Triage a specific issue
 
 1. **Gather context.** Read the full issue (body, comments, labels, reporter, dates). Parse any prior triage notes so you don't re-ask resolved questions. Explore the codebase.
@@ -42,6 +51,8 @@ Show counts and a one-line summary per issue. Let the maintainer pick.
    - `ready-for-human` — same structure, but note why it can't be delegated.
    - `needs-info` — post triage notes with specific, actionable questions.
    - `wontfix` — polite explanation, then close.
+
+If label/state mutation fails because of missing permissions or missing labels, leave the comment/draft and tell the maintainer exactly what could not be changed.
 
 ## Needs-info template
 
@@ -62,3 +73,10 @@ Show counts and a one-line summary per issue. Let the maintainer pick.
 ## Resuming a previous session
 
 If prior triage notes exist on the issue, read them, check whether the reporter has answered any outstanding questions, and present an updated picture before continuing. Don't re-ask resolved questions.
+
+## Common errors
+
+- Moving a bug to `ready-for-agent` without attempting reproduction or explaining why reproduction is blocked.
+- Asking vague `needs-info` questions instead of requesting logs, steps, versions, fixtures, or screenshots.
+- Re-labeling without reading prior triage notes.
+- Using file paths or line numbers in durable briefs when behavior contracts would age better.

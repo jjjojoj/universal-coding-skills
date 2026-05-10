@@ -45,6 +45,8 @@ _Avoid_: Client, buyer, account
 - **Only include terms specific to this project's context.** General programming concepts don't belong.
 - **Group terms under subheadings** when natural clusters emerge.
 - **Write an example dialogue.** A conversation between a dev and a domain expert that demonstrates how the terms interact naturally.
+- **Separate facts from questions.** Resolved language belongs in Language and Relationships; unresolved language belongs in Flagged ambiguities.
+- **Record source when useful.** If a term was confirmed by code, docs, or a named user decision, mention that briefly.
 
 ## Single vs multi-context repos
 
@@ -67,3 +69,11 @@ _Avoid_: Client, buyer, account
 - **Fulfillment → Billing**: Fulfillment emits `ShipmentDispatched` events; Billing consumes them
 - **Ordering ↔ Billing**: Shared types for `CustomerId` and `Money`
 ```
+
+## Maintenance checks
+
+Before updating a context file:
+
+- Read the current file first; preserve existing resolved language unless the user explicitly changes it.
+- Do not add duplicate aliases under different canonical terms.
+- If a term moves between contexts, update the context map relationship at the same time.

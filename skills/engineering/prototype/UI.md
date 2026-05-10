@@ -58,7 +58,9 @@ Behaviour:
 - Clicking an arrow updates the URL search param so the variant is shareable and reload-stable.
 - Keyboard: `←` and `→` arrow keys also cycle.
 - Visually distinct from the page so it's obviously not part of the design being evaluated.
-- Hidden in production builds.
+- Hidden in production builds or guarded so it cannot appear in a released route.
+
+If the app has a browser test or screenshot workflow, use the lightest version of it to confirm each variant renders and the switcher changes the URL. This is not a production test suite; it is a sanity check that the prototype is usable.
 
 ### 5. Hand it over
 
@@ -74,3 +76,4 @@ Once a variant has won, write down which one and why. Then delete the losing var
 - **Sharing too much code between variants.** A shared `<Header>` is fine; a shared `<Layout>` defeats the point.
 - **Wiring variants to real mutations.** Read-only is fine; point mutations at a stub.
 - **Promoting the prototype directly to production.** Rewrite it properly when you fold it in.
+- **Leaving the switcher reachable after the decision.** The switcher is scaffolding, not product UI.

@@ -1,12 +1,26 @@
+---
+name: diagnose
+description: Diagnose hard bugs by first building a fast, repeatable feedback loop, then reproducing, testing hypotheses, instrumenting, fixing, and cleaning up. Use when debugging failures, regressions, flaky behavior, performance problems, or unclear root causes.
+---
+
 # Diagnose
 
 A discipline for hard bugs. Skip phases only when explicitly justified.
 
 ## Phase 1 — Build a feedback loop
 
-**This is the skill.** Everything else is mechanical. If you have a fast, deterministic, agent-runnable pass/fail signal for the bug, you will find the cause — bisection, hypothesis-testing, and instrumentation all just consume that signal. If you don't have one, no amount of staring at code will save you.
+**This is the skill.** Everything else is mechanical. If you have a fast, deterministic, repeatable pass/fail signal for the bug, you will find the cause — bisection, hypothesis-testing, and instrumentation all just consume that signal. If you don't have one, no amount of staring at code will save you.
 
 Spend disproportionate effort here. **Be aggressive. Be creative. Refuse to give up.**
+
+### Feedback loop contract
+
+Every loop should be runnable by a human or automation with one command. Define the meaning of its exit status:
+
+- `0` means the symptom is absent.
+- Non-zero means the symptom is present, the harness failed to run, or the signal is invalid. Make these distinguishable in stdout/stderr.
+
+If a tool has its own documented exit codes, preserve them and wrap only when the wrapper can make the outcome clearer.
 
 ### Ways to construct one — try them in roughly this order
 
@@ -30,8 +44,16 @@ Treat the loop as a product. Once you have _a_ loop, ask:
 - Can I make it faster? (Cache setup, skip unrelated init, narrow the test scope.)
 - Can I make the signal sharper? (Assert on the specific symptom, not "didn't crash".)
 - Can I make it more deterministic? (Pin time, seed RNG, isolate filesystem, freeze network.)
+- Can I make failures legible? (Print the captured symptom, command, seed, fixture, and temp path.)
 
 A 30-second flaky loop is barely better than no loop. A 2-second deterministic loop is a debugging superpower.
+
+### Common loop errors
+
+- **Wrong failure**: the loop fails, but not for the user's symptom. Fix the loop before debugging code.
+- **Hidden dependency**: loop passes locally but fails with missing env, clock, network, cache, or fixture state.
+- **Flaky setup**: setup races mask the actual bug. Separate setup failure from symptom failure in output.
+- **Too broad**: full-suite loops are useful for verification, not hypothesis testing. Minimise after reproducing.
 
 ### Non-deterministic bugs
 

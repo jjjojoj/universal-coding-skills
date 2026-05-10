@@ -26,6 +26,8 @@ Third-party services (Stripe, Twilio, etc.) you don't control. The deepened modu
 
 - **One adapter means a hypothetical seam. Two adapters means a real one.** Don't introduce a port unless at least two adapters are justified (typically production + test).
 - **Internal seams vs external seams.** A deep module can have internal seams (private to its implementation) as well as the external seam at its interface.
+- **Own the policy.** The deepened module should own retries, validation, ordering, and error translation when callers currently duplicate them.
+- **Keep adapters thin.** Adapters translate transport or storage details; they should not contain business rules that callers expect the deep module to enforce.
 
 ## Testing strategy: replace, don't layer
 
@@ -33,3 +35,10 @@ Third-party services (Stripe, Twilio, etc.) you don't control. The deepened modu
 - Write new tests at the deepened module's interface. The **interface is the test surface**.
 - Tests assert on observable outcomes through the interface, not internal state.
 - Tests should survive internal refactors — they describe behaviour, not implementation.
+
+## Common mistakes
+
+- Introducing a port for a dependency that never varies.
+- Moving files without moving responsibility.
+- Keeping a large configuration object as the new interface when callers only need one or two intents.
+- Calling the work complete before deleting redundant shallow tests and unused pass-through modules.
