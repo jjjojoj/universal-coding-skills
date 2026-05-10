@@ -1,7 +1,7 @@
 # Universal Coding Skills
 
 > Tool-agnostic coding skills adapted from [mattpocock/skills](https://github.com/mattpocock/skills).  
-> Works with **any** AI coding agent — Claude Code, Codex, OpenCode, Cursor, Copilot, Windsurf, and more.
+> Works with **any** AI coding agent — Codex, OpenCode, Cursor, Copilot, Windsurf, and more.
 
 ## What Is This?
 
@@ -15,7 +15,6 @@ Each skill is a structured `SKILL.md` with optional reference files. They encode
 
 Add the relevant `SKILL.md` content to your AI coding tool's system prompt or project instructions:
 
-- **Claude Code**: Add to `CLAUDE.md` or `.claude/` project instructions
 - **Codex**: Add to `codex.md` or `AGENTS.md`
 - **OpenCode**: Add to project instructions or system prompt
 - **Cursor**: Add to `.cursorrules` or project rules
@@ -91,3 +90,8 @@ MIT
 
 - Original skills by [Matt Pocock](https://github.com/mattpocock) — [mattpocock/skills](https://github.com/mattpocock/skills)
 - Adapted to universal format for use with any AI coding agent
+
+### Active Coding Agents
+
+- **Codex** (OpenAI) — primary coding agent for structured tasks
+- **OpenCode** — supplementary coding agent for exploration and quick tasks
