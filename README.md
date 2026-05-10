@@ -1,97 +1,74 @@
 # Universal Coding Skills
 
-> Tool-agnostic coding skills adapted from [mattpocock/skills](https://github.com/mattpocock/skills).  
-> Works with **any** AI coding agent — Codex, OpenCode, Cursor, Copilot, Windsurf, and more.
+给编程助手（Codex、OpenCode）使用的专业技能库。让助手在特定任务中遵循经过验证的方法论，而不是自由发挥。
 
-## What Is This?
-
-A collection of battle-tested engineering workflows, originally written for Claude Code by [Matt Pocock](https://github.com/mattpocock), now adapted into a **universal format** that works with any AI-powered coding tool.
-
-Each skill is a structured `SKILL.md` with optional reference files. They encode **disciplines, not features** — ways of working that make your AI agent more effective.
-
-## How to Use
-
-### Option 1: System Prompt (Universal)
-
-Add the relevant `SKILL.md` content to your AI coding tool's system prompt or project instructions:
-
-- **Codex**: Add to `codex.md` or `AGENTS.md`
-- **OpenCode**: Add to project instructions or system prompt
-- **Cursor**: Add to `.cursorrules` or project rules
-- **Copilot**: Add to `.github/copilot-instructions.md`
-- **Windsurf**: Add to `.windsurfrules`
-
-### Option 2: Pick Individual Skills
-
-Copy only the skills you need into your project:
+## 安装
 
 ```bash
-# Example: add TDD skill to your project
-cp -r skills/engineering/tdd ./your-project/.ai-skills/tdd
+# Clone
+git clone git@github.com:jjjojoj/universal-coding-skills.git
+
+# 安装到 Codex
+for skill in $(ls skills/engineering skills/productivity); do
+  cp -r "skills/engineering/$skill" ~/.codex/skills/ 2>/dev/null
+  cp -r "skills/productivity/$skill" ~/.codex/skills/ 2>/dev/null
+done
+
+# 安装到 OpenCode
+mkdir -p ~/.config/opencode/skills
+for skill in $(ls skills/engineering skills/productivity); do
+  cp -r "skills/engineering/$skill" ~/.config/opencode/skills/ 2>/dev/null
+  cp -r "skills/productivity/$skill" ~/.config/opencode/skills/ 2>/dev/null
+done
 ```
 
-Then reference it in your tool's config.
+## Skill 索引
 
-### Option 3: Context on Demand
+### Engineering（工程）
 
-When you need a skill, paste its content into the conversation with your AI agent.
+| Skill | 用途 | 触发条件 |
+|-------|------|---------|
+| [diagnose](skills/engineering/diagnose/) | 系统化调试：先建反馈循环，再定位根因 | 有 bug 需要调试 |
+| [prototype](skills/engineering/prototype/) | 构建可丢弃代码回答设计问题 | 需要验证 UI 概念或逻辑方案 |
+| [tdd](skills/engineering/tdd/) | 行为驱动测试开发，垂直切片 | 实现需要测试保护的功能 |
+| [zoom-out](skills/engineering/zoom-out/) | 画高层代码地图，理解模块关系 | 不熟悉的代码区域 |
+| [triage](skills/engineering/triage/) | Issue 分类和状态管理 | 处理 issue backlog |
+| [to-prd](skills/engineering/to-prd/) | 从对话上下文合成 PRD | 设计讨论需要文档化 |
+| [to-issues](skills/engineering/to-issues/) | 把计划拆成垂直切片 issue | PRD 需要分解为任务 |
+| [grill-with-docs](skills/engineering/grill-with-docs/) | 对照项目文档审阅方案 | 需要接地气的设计审阅 |
+| [improve-codebase-architecture](skills/engineering/improve-codebase-architecture/) | 找架构加深机会 | 代码结构需要改进 |
 
-## Skills Overview
+### Productivity（效率）
 
-### Engineering
+| Skill | 用途 | 触发条件 |
+|-------|------|---------|
+| [caveman](skills/productivity/caveman/) | 超精简回复模式，省 ~75% token | 需要省 token |
+| [grill-me](skills/productivity/grill-me/) | 逐个问题审阅设计方案 | 需要找方案漏洞 |
+| [write-a-skill](skills/productivity/write-a-skill/) | 创建新 skill 的指南 | 需要编写新 skill |
 
-| Skill | Description |
-|-------|-------------|
-| [tdd](skills/engineering/tdd/) | Test-driven development with vertical-slice red-green-refactor |
-| [diagnose](skills/engineering/diagnose/) | Disciplined debugging: feedback loop → reproduce → hypothesize → instrument → fix |
-| [prototype](skills/engineering/prototype/) | Build throwaway prototypes to flush out designs (logic or UI) |
-| [to-prd](skills/engineering/to-prd/) | Turn conversation context into a structured PRD |
-| [to-issues](skills/engineering/to-issues/) | Break plans into vertical-slice issues |
-| [improve-codebase-architecture](skills/engineering/improve-codebase-architecture/) | Find deepening opportunities using domain language |
-| [grill-with-docs](skills/engineering/grill-with-docs/) | Stress-test plans against domain model and documentation |
-| [triage](skills/engineering/triage/) | Issue triage through a state machine |
-| [zoom-out](skills/engineering/zoom-out/) | Get broader context on unfamiliar code |
+## Skill 结构
 
-### Productivity
+```
+skill-name/
+├── SKILL.md           # 主文件（必须，包含 YAML frontmatter）
+├── REFERENCE.md       # 参考文档（按需）
+├── EXAMPLES.md        # 示例（按需）
+└── scripts/           # 工具脚本（按需）
+```
 
-| Skill | Description |
-|-------|-------------|
-| [grill-me](skills/productivity/grill-me/) | Relentless Q&A to stress-test plans |
-| [caveman](skills/productivity/caveman/) | Ultra-compressed communication (~75% token reduction) |
-| [write-a-skill](skills/productivity/write-a-skill/) | Create new skills with proper structure |
+### SKILL.md Frontmatter
 
-## Key Concepts
+每个 SKILL.md 必须包含 YAML frontmatter：
 
-### Vertical Slices > Horizontal Slices
+```yaml
+---
+name: skill-name
+description: 一句话说明功能。Use when [触发条件]。
+---
+```
 
-Whether writing tests or breaking down work, prefer **vertical slices** (tracer bullets) over horizontal ones. Each slice cuts through all layers end-to-end, delivering a narrow but complete path.
+`description` 是助手判断是否加载该 skill 的唯一依据，必须精确。
 
-### Depth Over Breadth
+## 来源
 
-Design **deep modules** — small interfaces hiding complex implementations. This maximizes leverage (capability per unit of interface) and locality (change concentrated in one place).
-
-### Behavior Over Implementation
-
-Tests should verify **what** the system does through public interfaces, not **how** it does it. Tests coupled to implementation break on refactors without behavior changes.
-
-## Contributing
-
-Contributions welcome! Please:
-
-1. Keep skills tool-agnostic (no Claude Code / Cursor / etc. specific references)
-2. Follow the existing structure (SKILL.md + optional reference files)
-3. Keep descriptions concise and trigger-focused
-
-## License
-
-MIT
-
-## Acknowledgments
-
-- Original skills by [Matt Pocock](https://github.com/mattpocock) — [mattpocock/skills](https://github.com/mattpocock/skills)
-- Adapted to universal format for use with any AI coding agent
-
-### Active Coding Agents
-
-- **Codex** (OpenAI) — primary coding agent for structured tasks
-- **OpenCode** — supplementary coding agent for exploration and quick tasks
+基于 [mattpocock/skills](https://github.com/mattpocock/skills) 改编，扩展了 common mistakes、when-to-deviate、退出码规范等内容。

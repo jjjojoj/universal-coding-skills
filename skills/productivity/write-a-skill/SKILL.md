@@ -1,3 +1,8 @@
+---
+name: write-a-skill
+description: Guide for creating or updating Codex skills with specialized knowledge, workflows, or tool integrations. Use when the user wants to create a new skill or improve an existing one.
+---
+
 # Writing Skills
 
 ## Process
@@ -9,7 +14,7 @@
    - Any reference materials to include?
 
 2. **Draft the skill** — create:
-   - SKILL.md with concise instructions
+   - SKILL.md with YAML frontmatter and concise instructions
    - Additional reference files if content exceeds 500 lines
    - Utility scripts if deterministic operations needed
 
@@ -32,6 +37,11 @@ skill-name/
 ## SKILL.md Template
 
 ```md
+---
+name: skill-name
+description: One sentence. Use when [specific triggers].
+---
+
 # Skill Name
 
 ## Quick start
@@ -93,6 +103,7 @@ Split into separate files when:
 
 After drafting, verify:
 
+- [ ] YAML frontmatter present with name and description
 - [ ] Description includes triggers ("Use when...")
 - [ ] SKILL.md under 100 lines (or split)
 - [ ] No time-sensitive info
